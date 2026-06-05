@@ -1,5 +1,8 @@
 import {useEffect,useState} from "react";
 import {Link} from "react-router-dom";
+import { BsCart } from "react-icons/bs";
+import { useContext } from "react";
+import { CartContext } from "./Features/ContextProvider";
 
 type Product = {
     id: number;
@@ -16,8 +19,12 @@ type Product = {
 
 function Products(){
 
+    
+    const { cart,dispatch } = useContext(CartContext)
+
     const [products, setProducts] = useState<Product[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+
 
     console.log(searchTerm);
     useEffect(() => {
@@ -38,6 +45,8 @@ function Products(){
         
         <div className="products">
             <h1>Products</h1>
+             <Link to={`/Cart`}><BsCart></BsCart>{cart.length}</Link>
+             
 
             <div><input type="text" className= "search" placeholder="Search products..." onChange={(e) => setSearchTerm(e.target.value)} /> 
               
@@ -47,28 +56,10 @@ function Products(){
                 <div className="card" key={product.id}>
                     <h2>{product.title}</h2>
                     <p>{product.description}</p>
-                    <p>Category: {product.category}</p>
                     <img src={product.thumbnail} alt={product.title} />
                     <p>${product.price.toFixed(2)}</p>
-                    <p>Rating: {product.rating}</p>
-                    <p>Stock: {product.stock}</p>
-                    <p>Brand: {product.brand}</p>
-                    <Link to={`/product-info/${product.id}`}>View Details</Link>
-                    
-                </div>
-            ))}
-            
-            {products.map(product => (
-                <div className="card" key={product.id}>
-                    <h2>{product.title}</h2>
-                    <p>{product.description}</p>
-                    <p>Category: {product.category}</p>
-                    <img src={product.thumbnail} alt={product.title} />
-                    <p>${product.price.toFixed(2)}</p>
-                    <p>Rating: {product.rating}</p>
-                    <p>Stock: {product.stock}</p>
-                    <p>Brand: {product.brand}</p>
-                    <Link to={`/product-info/${product.id}`}>View Details</Link>
+                    <Link to={`/product-info/${product.id}`}>View Details</Link><br></br>
+                    <button className="cart-button" onClick={() => {dispatch({type : "Add", product : product});}}>Add To Cart</button>
                     
                 </div>
             ))}
